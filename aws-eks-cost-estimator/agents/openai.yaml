@@ -1,0 +1,4 @@
+interface:
+  display_name: "AWS EKS Cost Estimator"
+  short_description: "Estimate current AWS EKS costs."
+  default_prompt: "Use $aws-eks-cost-estimator to estimate the current AWS EKS cluster cost from this repo or from node counts."
