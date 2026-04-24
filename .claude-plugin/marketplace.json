@@ -1,14 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "omc",
-  "description": "Claude Code harness template built on oh-my-claudecode — framework agents, vendor skill symlinks, and a generator skill for growing custom skills per workspace",
+  "description": "Claude Code plugin template on top of oh-my-claudecode — fork, personalise, and grow custom skills per workspace via /omh-setup",
   "owner": {
     "name": "<your-github-handle>"
   },
   "plugins": [
     {
       "name": "omc-harness",
-      "description": "Claude Code harness — 19 framework agents, vendor-delegated hooks",
+      "description": "OMC-based Claude Code plugin with 19 framework agents and a workspace-driven custom skill generator",
       "version": "0.1.0",
       "author": {
         "name": "<your-github-handle>"

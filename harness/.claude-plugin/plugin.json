@@ -1,7 +1,7 @@
 {
   "name": "omc-harness",
   "version": "0.1.0",
-  "description": "Claude Code harness — OMC core + 19 framework agents + workspace-driven custom skills",
+  "description": "OMC-based Claude Code plugin with 19 framework agents and a workspace-driven custom skill generator",
   "skills": "./skills/",
   "author": {
     "name": "<your-github-handle>"
