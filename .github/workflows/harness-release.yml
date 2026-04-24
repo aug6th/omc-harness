@@ -1,0 +1,197 @@
+name: "harness: Plugin Release"
+
+on:
+  # 1) PR 머지 시 자동 (harness/ 변경, main 타겟만)
+  pull_request:
+    types: [closed]
+    branches: [main]
+    paths:
+      - "harness/**"
+      - "!harness/vendor/**"
+      - "!harness/node_modules/**"
+      - "!harness/package-lock.json"
+
+  # 2) PR 코멘트 /release harness
+  issue_comment:
+    types: [created]
+
+  # 3) 수동 트리거
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "버전 bump 타입"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: "patch"
+
+jobs:
+  parse-comment:
+    if: >-
+      github.event_name == 'issue_comment'
+      && github.event.issue.pull_request
+      && startsWith(github.event.comment.body, '/release harness')
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+      pr_number: ${{ steps.check.outputs.pr_number }}
+      bump: ${{ steps.bump.outputs.type }}
+    steps:
+      - name: Check PR is approved
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const reviews = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            const approved = reviews.data.some(r => r.state === 'APPROVED');
+
+            if (!approved) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: '⚠️ `/release harness` 실패: PR이 아직 approve되지 않았습니다.',
+              });
+              core.setOutput('should_run', 'false');
+              return;
+            }
+
+            core.setOutput('should_run', 'true');
+            core.setOutput('pr_number', context.issue.number);
+
+      - name: Determine bump type
+        id: bump
+        if: steps.check.outputs.should_run == 'true'
+        env:
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          EXPLICIT=$(echo "$COMMENT" | grep -oP '/release harness\s+\K(patch|minor|major)' || true)
+          if [ -n "$EXPLICIT" ]; then
+            echo "type=$EXPLICIT" >> "$GITHUB_OUTPUT"
+          else
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: React to comment
+        if: steps.check.outputs.should_run == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+  release:
+    needs: [parse-comment]
+    if: >-
+      always() && (
+        (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+        || (github.event_name == 'workflow_dispatch')
+        || (needs.parse-comment.result == 'success' && needs.parse-comment.outputs.should_run == 'true')
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: harness
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          submodules: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: harness/package-lock.json
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Determine bump type
+        id: bump
+        working-directory: .
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_BUMP: ${{ github.event.inputs.bump }}
+          COMMENT_BUMP: ${{ needs.parse-comment.outputs.bump }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "type=$DISPATCH_BUMP" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" = "issue_comment" ]; then
+            echo "type=${COMMENT_BUMP:-patch}" >> "$GITHUB_OUTPUT"
+          else
+            LOWER=$(echo "$PR_TITLE" | tr '[:upper:]' '[:lower:]')
+            if echo "$LOWER" | grep -qP '^(\[.*\]\s*)?feat'; then
+              echo "type=minor" >> "$GITHUB_OUTPUT"
+            elif echo "$LOWER" | grep -qP '^(\[.*\]\s*)?fix'; then
+              echo "type=patch" >> "$GITHUB_OUTPUT"
+            else
+              echo "type=patch" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Run release script
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release -- ${{ steps.bump.outputs.type }}
+
+      - name: Get new version
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Commit, tag, and push
+        working-directory: .
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "release(harness): v$NEW_VERSION"
+          git tag -a "harness/v$NEW_VERSION" -m "harness/v$NEW_VERSION"
+          git push origin main
+          git push origin "harness/v$NEW_VERSION"
+
+      - name: Create GitHub Release
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "harness/v$NEW_VERSION" \
+            --title "omc-harness v$NEW_VERSION" \
+            --notes-file .github/release-body.md
+
+      - name: Comment result on PR
+        if: github.event_name == 'issue_comment'
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ needs.parse-comment.outputs.pr_number }}
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+          BUMP: ${{ steps.bump.outputs.type }}
+        run: |
+          gh pr comment "$PR_NUMBER" \
+            --body "Released **harness/v$NEW_VERSION** ($BUMP) :tada:
+
+            - [Release page](https://github.com/${{ github.repository }}/releases/tag/harness/v$NEW_VERSION)"

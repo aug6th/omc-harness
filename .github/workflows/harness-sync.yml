@@ -1,0 +1,69 @@
+name: "harness: Vendor Sync"
+
+on:
+  schedule:
+    # Daily 00:00 UTC (09:00 KST)
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Check for new OMC release
+        id: check
+        run: |
+          cd harness/vendor/oh-my-claudecode
+          CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "unknown")
+          echo "current_tag=$CURRENT_TAG" >> "$GITHUB_OUTPUT"
+
+          git fetch --tags origin
+          LATEST_TAG=$(git tag -l 'v*' --sort=-version:refname | head -1)
+          echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+          if [ "$CURRENT_TAG" = "$LATEST_TAG" ]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+            echo "Already on latest: $CURRENT_TAG"
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            echo "Update available: $CURRENT_TAG → $LATEST_TAG"
+          fi
+
+      - name: Update submodule to latest release
+        if: steps.check.outputs.up_to_date == 'false'
+        env:
+          LATEST_TAG: ${{ steps.check.outputs.latest_tag }}
+        run: |
+          cd harness/vendor/oh-my-claudecode
+          git checkout "$LATEST_TAG"
+
+      - name: Write vendor version file
+        if: steps.check.outputs.up_to_date == 'false'
+        env:
+          LATEST_TAG: ${{ steps.check.outputs.latest_tag }}
+        run: |
+          echo "${LATEST_TAG#v}" > harness/.omc-vendor-version
+
+      - name: Commit and push to main
+        if: steps.check.outputs.up_to_date == 'false'
+        env:
+          CURRENT_TAG: ${{ steps.check.outputs.current_tag }}
+          LATEST_TAG: ${{ steps.check.outputs.latest_tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add harness/vendor/oh-my-claudecode harness/.omc-vendor-version
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+
+          git commit -m "chore(harness): bump vendor oh-my-claudecode $CURRENT_TAG → $LATEST_TAG"
+          git push origin main
