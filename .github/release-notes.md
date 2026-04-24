@@ -1,6 +1,6 @@
 ## Install / Upgrade
 
 ```bash
-claude plugins marketplace update aug
-claude plugins update omc-harness@aug
+claude plugins marketplace update omc
+claude plugins update omc-harness@omc
 ```

@@ -4,7 +4,7 @@
   "description": "Claude Code harness — OMC core + 19 framework agents + workspace-driven custom skills",
   "skills": "./skills/",
   "author": {
-    "name": "aug6th"
+    "name": "<your-github-handle>"
   },
   "license": "MIT",
   "keywords": [

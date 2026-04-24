@@ -1,5 +1,5 @@
 {
-  "name": "@eun2ce/omc-harness",
+  "name": "omc-harness",
   "version": "0.1.0",
   "description": "Claude Code harness — OMC core via vendor submodule",
   "type": "module",
