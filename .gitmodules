@@ -1,0 +1,4 @@
+[submodule "harness/vendor/oh-my-claudecode"]
+	path = harness/vendor/oh-my-claudecode
+	url = https://github.com/Yeachan-Heo/oh-my-claudecode.git
+	branch = main

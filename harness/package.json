@@ -1,0 +1,50 @@
+{
+  "name": "@eun2ce/omc-harness",
+  "version": "0.1.0",
+  "description": "Claude Code harness — OMC core via vendor submodule",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "agents",
+    "hooks",
+    "scripts",
+    "config",
+    ".claude-plugin",
+    "AGENTS.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "lint": "eslint src/",
+    "release": "npx tsx scripts/git/release.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^10.2.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.58.2",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "harness",
+    "multi-agent"
+  ],
+  "license": "MIT"
+}

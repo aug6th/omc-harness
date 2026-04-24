@@ -1,0 +1,16 @@
+{
+  "name": "omc-harness",
+  "version": "0.1.0",
+  "description": "Claude Code harness — OMC core + 19 framework agents + workspace-driven custom skills",
+  "skills": "./skills/",
+  "author": {
+    "name": "aug6th"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "harness",
+    "multi-agent"
+  ]
+}

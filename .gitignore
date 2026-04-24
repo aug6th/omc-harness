@@ -1,0 +1,32 @@
+# Claude Code / OMC local state
+.omc/
+.omai/
+.claude/
+
+# Harness build output
+harness/dist/
+harness/node_modules/
+harness/.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node
+node_modules/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env
+.env
+.env.*
+!.env.example

@@ -1,0 +1,182 @@
+{
+  "description": "Harness orchestration hooks — delegates to OMC core via vendor submodule",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/keyword-detector.mjs",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/skill-injector.mjs",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/session-start.mjs",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/project-memory-session.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/pre-tool-enforcer.mjs",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/scripts/hooks/agent-model-router.mjs",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/permission-handler.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/post-tool-verifier.mjs",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/project-memory-posttool.mjs",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/post-tool-rules-injector.mjs",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/post-tool-use-failure.mjs",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/subagent-tracker.mjs start",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/subagent-tracker.mjs stop",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/pre-compact.mjs",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/project-memory-precompact.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/context-guard-stop.mjs",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/persistent-mode.cjs",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/code-simplifier.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/run.cjs \"$CLAUDE_PLUGIN_ROOT\"/vendor/oh-my-claudecode/scripts/session-end.mjs",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

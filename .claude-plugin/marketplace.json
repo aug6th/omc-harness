@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "aug",
+  "description": "Claude Code harness template — OMC core via submodule, framework agents only",
+  "owner": {
+    "name": "aug6th",
+    "email": "eunhee.jo@kakao.com"
+  },
+  "plugins": [
+    {
+      "name": "omc-harness",
+      "description": "Claude Code harness — 19 framework agents, vendor-delegated hooks",
+      "version": "0.1.0",
+      "author": {
+        "name": "aug6th"
+      },
+      "source": "./harness",
+      "category": "productivity",
+      "tags": [
+        "claude-code",
+        "harness",
+        "multi-agent",
+        "template"
+      ]
+    }
+  ],
+  "version": "0.1.0"
+}

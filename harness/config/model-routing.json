@@ -1,0 +1,24 @@
+{
+  "_comment": "Dynamic model routing by task complexity. LOW→min, MEDIUM→default, HIGH→max. codex→codex:codex-rescue",
+  "agents": {
+    "explore": { "default": "haiku", "min": "haiku", "range": ["haiku"] },
+    "writer": { "default": "haiku", "min": "haiku", "range": ["haiku"] },
+    "executor": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet", "opus"] },
+    "verifier": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet", "codex"] },
+    "test-engineer": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet", "codex"] },
+    "git-master": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet", "codex"] },
+    "qa-tester": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet", "codex"] },
+    "scientist": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet"] },
+    "document-specialist": { "default": "sonnet", "min": "haiku", "range": ["haiku", "sonnet"] },
+    "debugger": { "default": "sonnet", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "tracer": { "default": "sonnet", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "designer": { "default": "sonnet", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "security-reviewer": { "default": "sonnet", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "analyst": { "default": "opus", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "architect": { "default": "opus", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "planner": { "default": "opus", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "critic": { "default": "opus", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "code-reviewer": { "default": "opus", "min": "sonnet", "range": ["sonnet", "opus"] },
+    "code-simplifier": { "default": "opus", "min": "sonnet", "range": ["sonnet", "opus"] }
+  }
+}
