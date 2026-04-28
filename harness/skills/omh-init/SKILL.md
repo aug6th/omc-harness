@@ -142,9 +142,10 @@ grep -rn '"name": "omc"' .claude-plugin/marketplace.json
 
 다음 단계:
   1. git diff 로 치환 결과 확인
-  2. 원하면 추가 에이전트/스킬 커스터마이징
-  3. /omh-setup 으로 워크스페이스별 커스텀 스킬 추가 시작
-  4. git add -A && git commit -m "chore: bootstrap {pluginName} from aug6th-harness template"
+  2. npx tsx harness/scripts/register-marketplace.ts  # Claude Code 마켓플레이스 등록
+  3. 원하면 추가 에이전트/스킬 커스터마이징
+  4. /omh-setup 으로 워크스페이스별 커스텀 스킬 추가 시작
+  5. git add -A && git commit -m "chore: bootstrap {pluginName} from aug6th-harness template"
 ```
 
 ## 원칙
