@@ -1,4 +1,4 @@
-# omc-harness
+# aug6th-harness
 
 Claude Code plugin template built on [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode). Fork it, personalise the manifests, and use `/omh-setup` to grow it with custom skills per workspace.
 
@@ -9,7 +9,7 @@ Claude Code plugin template built on [oh-my-claudecode](https://github.com/Yeach
    ```bash
    git clone --recurse-submodules https://github.com/<you>/<your-repo>.git
    ```
-3. Replace `<your-github-handle>` placeholders in `.claude-plugin/marketplace.json` and `harness/.claude-plugin/plugin.json`
+3. Replace `aug6th` placeholders in `.claude-plugin/marketplace.json` and `harness/.claude-plugin/plugin.json`
 4. Install in Claude Code — point at `.claude-plugin/marketplace.json`
 
 ## Grow it

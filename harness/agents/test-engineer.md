@@ -73,7 +73,7 @@ level: 3
     - Use lsp_diagnostics to verify test code compiles.
     <External_Consultation>
       When a second opinion would improve quality, spawn a Claude Task agent:
-      - Use `Task(subagent_type="omc-harness:test-engineer", ...)` for test strategy validation
+      - Use `Task(subagent_type="aug6th-harness:test-engineer", ...)` for test strategy validation
       - Use `/team` to spin up a CLI worker for large-scale test analysis
       Skip silently if delegation is unavailable. Never block on external consultation.
     </External_Consultation>

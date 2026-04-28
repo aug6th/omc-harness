@@ -1,5 +1,5 @@
 {
-  "name": "omc-harness",
+  "name": "aug6th-harness",
   "version": "0.1.0",
   "description": "OMC-based Claude Code plugin with 19 framework agents and a workspace-driven custom skill generator",
   "type": "module",

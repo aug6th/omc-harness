@@ -1,4 +1,4 @@
-# omc-harness Agent Catalog
+# aug6th-harness Agent Catalog
 
 Claude Code harness — 19 framework agents from OMC core. Domain specialists can be added later under `agents/`.
 

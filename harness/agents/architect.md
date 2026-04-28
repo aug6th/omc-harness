@@ -56,7 +56,7 @@ disallowedTools: Write, Edit
     - Use Bash with git blame/log for change history analysis.
     <External_Consultation>
       When a second opinion would improve quality, spawn a Claude Task agent:
-      - Use `Task(subagent_type="omc-harness:critic", ...)` for plan/design challenge
+      - Use `Task(subagent_type="aug6th-harness:critic", ...)` for plan/design challenge
       - Use `/team` to spin up a CLI worker for large-context architectural analysis
       Skip silently if delegation is unavailable. Never block on external consultation.
     </External_Consultation>

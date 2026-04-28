@@ -156,7 +156,7 @@ async function githubGet<T>(path: string, token: string): Promise<T> {
   const res = await fetch(`https://api.github.com${path}`, {
     headers: {
       Authorization: `token ${token}`,
-      "User-Agent": "omc-harness-release",
+      "User-Agent": "aug6th-harness-release",
       Accept: "application/vnd.github.v3+json",
     },
   });
@@ -285,7 +285,7 @@ function generateReleaseBody(
   lines.push("### Components", "");
   lines.push("| Component | Version |");
   lines.push("|-----------|---------|");
-  lines.push(`| omc-harness (harness) | v${version} |`);
+  lines.push(`| aug6th-harness (harness) | v${version} |`);
   lines.push(`| oh-my-claudecode (vendor) | ${omcVersion} |`);
   lines.push("");
 
